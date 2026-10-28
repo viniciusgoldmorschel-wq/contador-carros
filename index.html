@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Carros Lavados - Novembro 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    padding: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 16px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .date-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 14px;
+    padding: 10px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .date-nav button {
+    background: #007aff;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .date-nav select {
+    flex: 1;
+    margin: 0 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: white;
+    text-align: center;
+    font-weight: 500;
+  }
+  .item {
+    background: white;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .item:active { background: #f0f0f0; }
+  .item.marked {
+    background: #e8f5e9;
+  }
+  .name {
+    font-size: 18px;
+    font-weight: 500;
+    flex: 1;
+  }
+  .bullet, .minus {
+    font-size: 28px;
+    width: 48px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .bullet {
+    color: #007aff;
+  }
+  .minus {
+    color: #ff3b30;
+  }
+  .count {
+    font-size: 32px;
+    font-weight: 600;
+    min-width: 50px;
+    text-align: center;
+    color: #1d1d1f;
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  button.ctrl {
+    flex: 1;
+    padding: 14px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .reset {
+    background: #ff3b30;
+    color: white;
+  }
+  .export {
+    background: #007aff;
+    color: white;
+  }
+  .total {
+    text-align: center;
+    margin: 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .month-summary {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    display: none;
+  }
+  .month-summary h3 {
+    text-align: center;
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+  }
+  .summary-row.grand {
+    font-weight: 700;
+    font-size: 18px;
+    border-bottom: none;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 2px solid #007aff;
+  }
+  .hint {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin-top: 12px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+  <h1>🚗 Carros Lavados</h1>
+  <div class="subtitle">Novembro 2026</div>
+
+  <div class="date-nav">
+    <button onclick="changeDay(-1)">‹</button>
+    <select id="daySelect" onchange="changeDayFromSelect()">
+      <option value="1">1 Domingo</option>
+      <option value="2">2 Segunda</option>
+      <option value="3">3 Terça</option>
+      <option value="4">4 Quarta</option>
+      <option value="5">5 Quinta</option>
+      <option value="6">6 Sexta</option>
+      <option value="7">7 Sábado</option>
+      <option value="8">8 Domingo</option>
+      <option value="9">9 Segunda</option>
+      <option value="10">10 Terça</option>
+      <option value="11">11 Quarta</option>
+      <option value="12">12 Quinta</option>
+      <option value="13">13 Sexta</option>
+      <option value="14">14 Sábado</option>
+      <option value="15">15 Domingo</option>
+      <option value="16">16 Segunda</option>
+      <option value="17">17 Terça</option>
+      <option value="18">18 Quarta</option>
+      <option value="19">19 Quinta</option>
+      <option value="20">20 Sexta</option>
+      <option value="21">21 Sábado</option>
+      <option value="22">22 Domingo</option>
+      <option value="23">23 Segunda</option>
+      <option value="24">24 Terça</option>
+      <option value="25">25 Quarta</option>
+      <option value="26">26 Quinta</option>
+      <option value="27">27 Sexta</option>
+      <option value="28">28 Sábado</option>
+      <option value="29">29 Domingo</option>
+      <option value="30">30 Segunda</option>
+    </select>
+    <button onclick="changeDay(1)">›</button>
+  </div>
+
+  <div id="list">
+    <div class="item" data-type="C">
+      <span class="name">C</span>
+      <span class="minus" onclick="decrement('C')">−</span>
+      <span class="count">0</span>
+      <span class="bullet" onclick="increment('C')">•</span>
+    </div>
+    <div class="item" data-type="SUV">
+      <span class="name">SUV</span>
+      <span class="minus" onclick="decrement('SUV')">−</span>
+      <span class="count">0</span>
+      <span class="bullet" onclick="increment('SUV')">•</span>
+    </div>
+    <div class="item" data-type="Carrinha classe 2">
+      <span class="name">Carrinha classe 2</span>
+      <span class="minus" onclick="decrement('Carrinha classe 2')">−</span>
+      <span class="count">0</span>
+      <span class="bullet" onclick="increment('Carrinha classe 2')">•</span>
+    </div>
+    <div class="item" data-type="Classe 3">
+      <span class="name">Classe 3</span>
+      <span class="minus" onclick="decrement('Classe 3')">−</span>
+      <span class="count">0</span>
+      <span class="bullet" onclick="increment('Classe 3')">•</span>
+    </div>
+    <div class="item" data-type="Classe 4">
+      <span class="name">Classe 4</span>
+      <span class="minus" onclick="decrement('Classe 4')">−</span>
+      <span class="count">0</span>
+      <span class="bullet" onclick="increment('Classe 4')">•</span>
+    </div>
+    <div class="item" data-type="Classe 5">
+      <span class="name">Classe 5</span>
+      <span class="minus" onclick="decrement('Classe 5')">−</span>
+      <span class="count">0</span>
+      <span class="bullet" onclick="increment('Classe 5')">•</span>
+    </div>
+    <div class="item" data-type="Frigorífico">
+      <span class="name">Frigorífico</span>
+      <span class="minus" onclick="decrement('Frigorífico')">−</span>
+      <span class="count">0</span>
+      <span class="bullet" onclick="increment('Frigorífico')">•</span>
+    </div>
+  </div>
+
+  <div class="total" id="total">Total do dia: 0</div>
+
+  <div class="controls">
+    <button class="ctrl reset" onclick="resetDay()">Repor este dia</button>
+    <button class="ctrl export" onclick="exportDay()">Exportar dia</button>
+  </div>
+
+  <div class="controls" style="margin-top: 10px;">
+    <button class="ctrl" style="background:#34c759; color:white;" onclick="toggleMonthSummary()">Ver total do mês</button>
+    <button class="ctrl export" onclick="exportMonth()">Exportar mês</button>
+  </div>
+
+  <div class="month-summary" id="monthSummary">
+    <h3>Total de Novembro 2026</h3>
+    <div id="summaryContent"></div>
+  </div>
+
+  <p class="hint">
+    Escolhe o dia em cima.<br>
+    Clica no • para +1 e no − para −1.<br>
+    Os dados ficam guardados neste dispositivo.
+  </p>
+
+<script>
+const TYPES = [
+  "C",
+  "SUV",
+  "Carrinha classe 2",
+  "Classe 3",
+  "Classe 4",
+  "Classe 5",
+  "Frigorífico"
+];
+
+const YEAR = 2026;
+const MONTH = 10; // novembro (0-based)
+const DAYS_IN_MONTH = 30;
+
+const STORAGE_KEY = "carros_lavados_nov2026";
+
+let selectedDay = 1; // começa no dia 1
+
+function getDateKey(day) {
+  return `${YEAR}-${String(MONTH + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function getWeekday(day) {
+  const d = new Date(YEAR, MONTH, day);
+  const weekdays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+  return weekdays[d.getDay()];
+}
+
+function loadAllData() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch(e) {}
+  }
+  return {};
+}
+
+function saveAllData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function getCountsForDay(day) {
+  const all = loadAllData();
+  const key = getDateKey(day);
+  if (!all[key]) {
+    const counts = {};
+    TYPES.forEach(t => counts[t] = 0);
+    return counts;
+  }
+  return all[key];
+}
+
+function setCountsForDay(day, counts) {
+  const all = loadAllData();
+  all[getDateKey(day)] = counts;
+  saveAllData(all);
+}
+
+function populateDaySelect() {
+  const select = document.getElementById("daySelect");
+  select.innerHTML = "";
+  for (let d = 1; d <= DAYS_IN_MONTH; d++) {
+    const option = document.createElement("option");
+    option.value = d;
+    option.textContent = `${d} ${getWeekday(d)}`;
+    if (d === selectedDay) option.selected = true;
+    select.appendChild(option);
+  }
+}
+
+function render() {
+  const counts = getCountsForDay(selectedDay);
+  let total = 0;
+
+  TYPES.forEach(type => {
+    const count = counts[type] || 0;
+    total += count;
+    const item = document.querySelector(`.item[data-type="${type}"]`);
+    if (item) {
+      item.querySelector(".count").textContent = count;
+      if (count > 0) {
+        item.classList.add("marked");
+      } else {
+        item.classList.remove("marked");
+      }
+    }
+  });
+
+  document.getElementById("total").textContent = "Total do dia: " + total;
+}
+
+function increment(type) {
+  const counts = getCountsForDay(selectedDay);
+  counts[type] = (counts[type] || 0) + 1;
+  setCountsForDay(selectedDay, counts);
+  render();
+}
+
+function decrement(type) {
+  const counts = getCountsForDay(selectedDay);
+  if ((counts[type] || 0) > 0) {
+    counts[type] = counts[type] - 1;
+    setCountsForDay(selectedDay, counts);
+    render();
+  }
+}
+
+function changeDay(delta) {
+  let newDay = selectedDay + delta;
+  if (newDay < 1) newDay = 1;
+  if (newDay > DAYS_IN_MONTH) newDay = DAYS_IN_MONTH;
+  selectedDay = newDay;
+  document.getElementById("daySelect").value = selectedDay;
+  render();
+}
+
+function changeDayFromSelect() {
+  selectedDay = parseInt(document.getElementById("daySelect").value);
+  render();
+}
+
+function resetDay() {
+  if (confirm("Repor os contadores deste dia a zero?")) {
+    const empty = {};
+    TYPES.forEach(t => empty[t] = 0);
+    setCountsForDay(selectedDay, empty);
+    render();
+  }
+}
+
+function exportDay() {
+  const counts = getCountsForDay(selectedDay);
+  let text = `Carros Lavados - ${selectedDay} de Novembro 2026 (${getWeekday(selectedDay)})\n\n`;
+  let total = 0;
+  TYPES.forEach(t => {
+    const c = counts[t] || 0;
+    text += t + ": " + c + "\n";
+    total += c;
+  });
+  text += "\nTotal: " + total;
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Dados do dia copiados! Podes colar no WhatsApp, Notas, etc.");
+  }).catch(() => {
+    alert(text);
+  });
+}
+
+function calculateMonthTotals() {
+  const totals = {};
+  TYPES.forEach(t => totals[t] = 0);
+  let grandTotal = 0;
+
+  for (let day = 1; day <= DAYS_IN_MONTH; day++) {
+    const counts = getCountsForDay(day);
+    TYPES.forEach(t => {
+      const c = counts[t] || 0;
+      totals[t] += c;
+      grandTotal += c;
+    });
+  }
+  return { totals, grandTotal };
+}
+
+function toggleMonthSummary() {
+  const box = document.getElementById("monthSummary");
+  const isVisible = box.style.display === "block";
+  if (isVisible) {
+    box.style.display = "none";
+    return;
+  }
+  const { totals, grandTotal } = calculateMonthTotals();
+  let html = "";
+  TYPES.forEach(t => {
+    html += `<div class="summary-row"><span>${t}</span><span>${totals[t]}</span></div>`;
+  });
+  html += `<div class="summary-row grand"><span>Total Geral</span><span>${grandTotal}</span></div>`;
+  document.getElementById("summaryContent").innerHTML = html;
+  box.style.display = "block";
+}
+
+function exportMonth() {
+  const { totals, grandTotal } = calculateMonthTotals();
+  let text = "Carros Lavados - Novembro 2026 (Total do Mês)\n\n";
+  TYPES.forEach(t => {
+    text += t + ": " + totals[t] + "\n";
+  });
+  text += "\nTotal Geral: " + grandTotal;
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Totais do mês copiados! Podes colar no WhatsApp, Notas, etc.");
+  }).catch(() => {
+    alert(text);
+  });
+}
+
+// Inicializar
+render();
+</script>
+</body>
+</html>
